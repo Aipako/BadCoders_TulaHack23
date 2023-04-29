@@ -1,0 +1,48 @@
+from sqlalchemy import *
+from sqlalchemy.orm import create_session
+from sqlalchemy.schema import Table, MetaData
+from sqlalchemy.ext.declarative import declarative_base
+import Good
+import UserData
+
+
+class DataBaseController:
+    #Атрибуты класса
+
+    #Конструктор класса
+
+    def __init__(self):
+        self.__sqlEngine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+        self.__sqlEngine.connect()
+        self.__metadata = MetaData(bind=self.__sqlEngine)
+        self.__connect_tables()
+        self.__session = create_session(bind=self.__sqlEngine)
+
+    #Ищем существующую базу данных
+
+    def get_existing_db(self):
+        pass
+
+    #Подключаем таблицы
+
+    def __connect_tables(self):
+        #self.__usersTable = Table('Users', self.__metadata, autoload=True)
+        self.__goodsTable = Table('Goods', self.__metadata,
+            Column('UserId', INTEGER, primary_key=True, nullable=False),
+            Column('Url', String, nullable=False),
+            Column('Price', INTEGER),
+            Column('MedianPrice', INTEGER),
+            autoload=True
+        )
+        self.__metadata.create_all()
+
+    def add_good(self, user_id, good):
+        self.__goodsTable.insert().values(UserId=user_id, Url=good.url, Price=good.price, MedianPrice=good.median_price)
+
+    def delete_good(self, user_id, good):
+        self.__goodsTable.delete().where(UserId=user_id).where(Url=good.url)
+
+    def get_goods_by_user(self, user_id):
+        pass
+        #self.__goodsTable.select().where(userId=user_id)
+
