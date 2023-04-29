@@ -11,6 +11,28 @@ namespace TBotService.Controllers
     [Route("[controller]")]
     public class BotController : ControllerBase
     {
+
+        [HttpPost("updategood", Name = "UpdateGood")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]       
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult UpdateGood(int userId, string url, int newPrice)
+        {
+            try
+            {
+                bool isSale;
+                if(!GoodUpdater.GetInstance().UpdateGood(userId, url, newPrice, out isSale ))
+                {
+                    return NotFound();
+                }
+                return Ok(isSale);
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
         [HttpPost("addgood", Name = "AddGood")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
