@@ -42,6 +42,7 @@ namespace TBotService.Controllers
                 cmd.Parameters.AddWithValue("@Price", good.Price);
                 cmd.Parameters.AddWithValue("@MedianPrice", good.MedianPrice);
                 cmd.Parameters.AddWithValue("@History", good.GetHistoryPacked());
+                cmd.ExecuteReader();
             }
             return;
         }
@@ -57,6 +58,7 @@ namespace TBotService.Controllers
                                   "Url=@Url";
                 cmd.Parameters.AddWithValue("@UserId", good.UserId);
                 cmd.Parameters.AddWithValue("@Url", good.Url);
+                cmd.ExecuteReader();
             }
             return;
         }
